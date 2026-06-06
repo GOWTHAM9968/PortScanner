@@ -1,4 +1,5 @@
 import socket
+import time
 
 target = input("Enter IP Address or Hostname: ").strip()
 
@@ -7,6 +8,8 @@ try:
 
     start_port = int(input("Enter Start Port: "))
     end_port = int(input("Enter End Port: "))
+
+    start_time = time.time()
 
     print(f"\nScanning {target} ({ip})...")
     print("-" * 40)
@@ -27,8 +30,13 @@ try:
 
         s.close()
 
+    end_time = time.time()
+
+    total_time = end_time - start_time
+
     print("-" * 40)
     print("Scan Completed.")
+    print(f"Total Scan Time: {total_time:.2f} seconds")
 
 except socket.gaierror:
     print("Error: Invalid hostname or IP address.")

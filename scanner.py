@@ -1,6 +1,6 @@
 import socket
 
-target = input("Enter IP Address or Hostname: ")
+target = input("Enter IP Address or Hostname: ").strip()
 
 try:
     ip = socket.gethostbyname(target)
@@ -8,7 +8,8 @@ try:
     start_port = int(input("Enter Start Port: "))
     end_port = int(input("Enter End Port: "))
 
-    print(f"\nScanning {ip}...\n")
+    print(f"\nScanning {target} ({ip})...")
+    print("-" * 40)
 
     for port in range(start_port, end_port + 1):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -17,14 +18,23 @@ try:
         result = s.connect_ex((ip, port))
 
         if result == 0:
-            print(f"Port {port} OPEN")
+            try:
+                service = socket.getservbyport(port)
+            except:
+                service = "unknown"
+
+            print(f"Port {port} OPEN ({service})")
 
         s.close()
 
-    print("\nScan Completed.")
+    print("-" * 40)
+    print("Scan Completed.")
 
 except socket.gaierror:
-    print("Invalid hostname or IP address.")
+    print("Error: Invalid hostname or IP address.")
 
 except ValueError:
-    print("Please enter valid port numbers.")
+    print("Error: Please enter valid port numbers.")
+
+except KeyboardInterrupt:
+    print("\nScan stopped by user.")
